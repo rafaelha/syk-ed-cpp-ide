@@ -42,7 +42,6 @@ sm H(g_dim, g_dim);
 sm h(g_dim, g_dim);
 sm Hint(G_dim, G_dim);
 sm HLR(G_dim, G_dim);
-sm HLRplus(G_dim, G_dim);
 VectorXcd gs;
 VectorXcd I; // TFD at infinite temperature
 VectorXd evalues;
@@ -207,7 +206,6 @@ void buildH()
 	}
 	h *= gamma * J / 4.0;
 	HLR = (left_id(h) - right_id(h));
-	HLRplus = (left_id(h) + right_id(h));
 	H = (left_id(h) * (1 + eta) + right_id(h) * (1-eta)) + 1i / 2.0 * mu * Hint;
 }
 void eigs()
@@ -326,11 +324,11 @@ void TFD()
 {
 	double beta = 0;
 	double dbeta = 10;
-	MatrixXcd betaH = (-dbeta * HLRplus);
-	cout << "betaH computed." << endl;
-	MatrixXcd expHLR = betaH.exp();
-	cout << "Matrix-exponential computed." << endl;
-	/*
+	MatrixXcd betah = -dbeta * h;
+	sm betaexp = (betah.exp()).sparseView();
+	cout << "Matrix exp computed." << endl;
+	sm expHLR = kroneckerProduct(betaexp, betaexp);
+	cout << "Full exponential stored." << endl;
 	auto tfd = I;
 	for (; beta < 500;)
 	{
@@ -341,7 +339,6 @@ void TFD()
 		tfd /= tfd.norm();
 		beta += dbeta;
 	}
-	*/
 }
 
 int main(int argc, char** argv)

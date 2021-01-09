@@ -12,8 +12,9 @@
 #include <Spectra/MatOp/SparseSymMatProd.h>
 #include <random>
 #include <fstream>
+#include <unsupported/Eigen/MatrixFunctions>
 
-#define M_PI 3.14159265359
+#define M_PI2 3.14159265359
 
 using namespace std;
 using namespace std::chrono;
@@ -41,7 +42,9 @@ sm H(g_dim, g_dim);
 sm h(g_dim, g_dim);
 sm Hint(G_dim, G_dim);
 sm HLR(G_dim, G_dim);
+sm HLRplus(G_dim, G_dim);
 VectorXcd gs;
+VectorXcd I; // TFD at infinite temperature
 VectorXd evalues;
 VectorXd ev_syk;
 VectorXd ev_syk_test;
@@ -204,6 +207,7 @@ void buildH()
 	}
 	h *= gamma * J / 4.0;
 	HLR = (left_id(h) - right_id(h));
+	HLRplus = (left_id(h) + right_id(h));
 	H = (left_id(h) * (1 + eta) + right_id(h) * (1-eta)) + 1i / 2.0 * mu * Hint;
 }
 void eigs()
@@ -218,6 +222,7 @@ void eigs()
 	SparseMatrix<double> Hi = (-1i * H).real();
 	SparseMatrix<double> H_real = kroneckerProduct(sdr, Hr) + kroneckerProduct(sor, Hi);
 
+	// Find groundstate of coupled SYK model
 	// Construct matrix operation object using the wrapper class DenseSymMatProd
 	SparseSymMatProd<double> op(H_real);
 	// Construct eigen solver object, requesting the largest three eigenvalues
@@ -239,6 +244,27 @@ void eigs()
 	//SelfAdjointEigenSolver<MatrixXcd> eigensolver(H, ComputeEigenvectors);
 	//ev_syk_test = eigensolver.eigenvalues();
 	//cout << ev_syk_test;
+
+	// Find TFD at infinite temperature
+	SparseMatrix<double> Sr = (1i*Hint).real();
+	SparseMatrix<double> Si = Hint.real();
+	SparseMatrix<double> S_real = kroneckerProduct(sdr, Sr) + kroneckerProduct(sor, Si);
+	// Construct matrix operation object using the wrapper class DenseSymMatProd
+	SparseSymMatProd<double> op_I(S_real);
+	// Construct eigen solver object, requesting the smallest eigenvalue
+	SymEigsSolver< double, SMALLEST_ALGE, SparseSymMatProd<double> > eigs_I(&op_I, 2, 6*2);
+	// Initialize and compute
+	eigs_I.init();
+	int nconv_I = eigs_I.compute();
+	// Retrieve results
+	if (eigs_I.info() != SUCCESSFUL)
+		cout << endl << "Error in sparse eigenvalue computation." << endl;
+	MatrixXd evec_I = eigs_I.eigenvectors();
+
+	VectorXd u_I = evec_I(seq(0, (last + 1) / 2 - 1), last);
+	VectorXd v_I = evec_I(seq((last + 1) / 2, last), last);
+	I = u_I + 1i * v_I;
+	I = I / I.norm();
 }
 void overlap()
 {
@@ -258,9 +284,9 @@ void overlap()
 			auto v = nm.dot(gs);
 			//cout << v.real() * v.real() + v.imag() * v.imag() << "\t";
 			overlap_data(n, m) = v;
-			double phase = arg(v) / M_PI;
+			double phase = arg(v) / M_PI2;
 			total += abs(v);
-			//double phase = atan(v.imag()/v.real()) / M_PI;
+			//double phase = atan(v.imag()/v.real()) / M_PI2;
 			if (first == -10) first = phase;
 
 			if (n == m)
@@ -295,6 +321,27 @@ void _save(MatrixXd src, string pathAndName)
 	{
 		cerr << "Could not open file. Error." << endl;
 	}
+}
+void TFD()
+{
+	double beta = 0;
+	double dbeta = 10;
+	MatrixXcd betaH = (-dbeta * HLRplus);
+	cout << "betaH computed." << endl;
+	MatrixXcd expHLR = betaH.exp();
+	cout << "Matrix-exponential computed." << endl;
+	/*
+	auto tfd = I;
+	for (; beta < 500;)
+	{
+		auto v = tfd.dot(gs);
+		cout << "beta: " << beta << ", overlap: " << abs(v) << endl;
+
+		tfd = expHLR * tfd;
+		tfd /= tfd.norm();
+		beta += dbeta;
+	}
+	*/
 }
 
 int main(int argc, char** argv)
@@ -342,7 +389,6 @@ int main(int argc, char** argv)
 
 
 	cout << endl << "Computing lowest eigenvalue of coupled SYKs... ";
-	cout << endl << "Computing lowest eigenvalue of coupled SYKs... ";
 	eigs();
 	toc();
 	cout << "Lowest Eigenvalues:" << endl << evalues << endl;
@@ -352,6 +398,7 @@ int main(int argc, char** argv)
 	cout << (HLRgs).norm() << endl;
 
 	//overlap();
+	TFD();
 
 	//_save(overlap_data.real(), "data/" + to_string(N) + "n" + d_tostr(eta) + "eta" + d_tostr(mu) + "mu_overlap_real.txt");
 	//_save((-1i * overlap_data).real(), "data/" + to_string(N) + "n" + d_tostr(eta) + "eta" + d_tostr(mu) + "mu_overlap_imag.txt");

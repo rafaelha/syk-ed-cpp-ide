@@ -298,7 +298,7 @@ void overlap()
 		//double phase = atan(v.imag()/v.real()) / M_PI2;
 	}
 	*/
-	overlap_data = VectorXd(dimSYK, num_evals);
+	overlap_data = MatrixXd(dimSYK, num_evals);
 	for (int i=0; i<num_evals; i++)
 	{
 		for (int n = 0; n < dimSYK; n++)

@@ -11,4 +11,4 @@ export OMP_NUM_THREADS=1
 module purge
 module add anaconda3
 module add gcc/10.1.0
-python3 execute.py $SLURM_ARRAY_TASK_ID
+python3 execute.py $SLURM_ARRAY_TASK_ID 30

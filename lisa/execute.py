@@ -3,18 +3,23 @@ import sys
 import subprocess
 
 idx = int(sys.argv[1])
+MAX = int(sys.argv[2])
 # idx = 0
 
-etas = np.linspace(0,2,100)
-eta = etas[idx]
+etas = np.linspace(0,2,400)
+mus = np.array([0,0.1,0.6])
+etas = np.repeat(etas,len(mus))
+mus = np.tile(mus,len(etas))
 
-eta = 0
+etas = etas[idx::MAX]
+mus = mus[idx::MAX]
 
-mus = np.linspace(0,1,30)
-mu = mus[idx]
+for i in range(len(etas)):
+        eta = etas[i]
+        mu = mus[i]
 
-print(eta)
-bashCommand = f"./ed.exe {eta} {mu}"
-process = subprocess.Popen(bashCommand.split(), stdout=subprocess.PIPE)
-output, error = process.communicate()
-print(output)
+        print(eta)
+        bashCommand = f"./ed.exe {eta} {mu}"
+        process = subprocess.Popen(bashCommand.split(), stdout=subprocess.PIPE)
+        output, error = process.communicate()
+        print(output)

@@ -25,9 +25,9 @@ using namespace std::literals;
 typedef SparseMatrix<complex<double>> sm;
 vector<sm> s;
 
-const int N = 16; // Majorana fermions in total
-const double J = 1.0;
-const int num_evals = 40;
+const int N = 32; // Majorana fermions in total
+const double J = 1.0/sqrt(2);
+const int num_evals = 20;
 const int dimSYK = (1 << N / 4);
 double eta;
 double mu;
@@ -330,18 +330,19 @@ void _save(MatrixXd src, string pathAndName)
 }
 void TFD()
 {
-	double beta = 0; // has to start from 0
-	double dbeta = 0.02;
+	double beta = 0.0; // has to start from 0
+	double dbeta = 0.1;
 	MatrixXcd betah = (-dbeta/4) * h;
 	sm betaexp = (betah.exp()).sparseView();
 	cout << "Matrix exp computed." << endl;
 	sm expHLR = kroneckerProduct(betaexp, betaexp);
 	cout << "Full exponential stored." << endl;
+	toc();
 	auto tfd = I;
 	auto tfd_max_overlap = tfd;
-	beta_max_overlap = 0;
-	double max_overlap = 0;
-	for (; beta <= 2;)
+	beta_max_overlap = 0.0;
+	double max_overlap = 0.0;
+	for (; beta <= 4.0;)
 	{
 		double olap = abs(tfd.dot(gs));
 		cout << "beta: " << beta << ", overlap: " << olap << endl;

@@ -1,6 +1,6 @@
 #!/bin/bash
 
-MAX=0.2
+MAX=2
 for i in `seq 0 0.02 ${MAX}`
 do
 	FILENAME=job_file_${i}.ll
@@ -8,7 +8,7 @@ do
 
 	echo "# Script for LoadLeveler job steps" >> $FILENAME
 
-	echo "# @ job_name = h-imp" >> $FILENAME
+	echo "# @ job_name = h-syk" >> $FILENAME
 	echo "# @ error  = error_${i}.err" >> $FILENAME
 	echo "# @ output = log_${i}.out" >> $FILENAME
 	echo "# @ job_type = MPICH" >> $FILENAME
@@ -27,7 +27,7 @@ do
 
 	echo "export OMP_NUM_THREADS=1" >> $FILENAME
 
-	echo "./ed.out ${i} 0.6" >> $FILENAME
+	echo "./ed.exe ${i} 0.6" >> $FILENAME
 
 
 	llsubmit $FILENAME >> log.out

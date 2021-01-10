@@ -2,8 +2,8 @@ n=16
 J=0.707107
 eta=0
 mu=0.689655
-beta-optimal=1.4
-max-overlap=0.999968
+beta-optimal=1.423
+max-overlap=0.999969
 -1.67965
 -1.67965
 -2.07811

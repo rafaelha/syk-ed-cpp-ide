@@ -1,11 +1,11 @@
 ﻿  ed_syk_gamma_matrices.cpp
-C:\Users\rafae\Desktop\syk-ed-cpp-ide\ed_syk_gamma_matrices.cpp(230,12): warning C4244: 'initializing': conversion from 'Spectra::SymEigsBase<Scalar,7,OpType,Spectra::IdentityBOp>::Index' to 'int', possible loss of data
+C:\Users\rafae\Desktop\syk-ed-cpp-ide\ed_syk_gamma_matrices.cpp(237,12): warning C4244: 'initializing': conversion from 'Spectra::SymEigsBase<Scalar,7,OpType,Spectra::IdentityBOp>::Index' to 'int', possible loss of data
           with
           [
               Scalar=double,
               OpType=Spectra::SparseSymMatProd<double,1,0,int>
           ]
-C:\Users\rafae\Desktop\syk-ed-cpp-ide\ed_syk_gamma_matrices.cpp(256,14): warning C4244: 'initializing': conversion from 'Spectra::SymEigsBase<Scalar,7,OpType,Spectra::IdentityBOp>::Index' to 'int', possible loss of data
+C:\Users\rafae\Desktop\syk-ed-cpp-ide\ed_syk_gamma_matrices.cpp(263,14): warning C4244: 'initializing': conversion from 'Spectra::SymEigsBase<Scalar,7,OpType,Spectra::IdentityBOp>::Index' to 'int', possible loss of data
           with
           [
               Scalar=double,
@@ -35,7 +35,7 @@ C:\Program Files\spectra-0.8.1\include\Spectra\SymEigsSolver.h(143): message : s
               Scalar=double,
               OpType=Spectra::SparseSymMatProd<double,1,0,int>
           ]
-C:\Users\rafae\Desktop\syk-ed-cpp-ide\ed_syk_gamma_matrices.cpp(227): message : see reference to class template instantiation 'Spectra::SymEigsSolver<double,7,Spectra::SparseSymMatProd<double,1,0,int>>' being compiled
+C:\Users\rafae\Desktop\syk-ed-cpp-ide\ed_syk_gamma_matrices.cpp(234): message : see reference to class template instantiation 'Spectra::SymEigsSolver<double,7,Spectra::SparseSymMatProd<double,1,0,int>>' being compiled
 C:\Program Files (x86)\Microsoft Visual Studio\2019\Professional\VC\Tools\MSVC\14.24.28314\include\chrono(632): message : see reference to class template instantiation 'std::chrono::duration<double,std::ratio<1,1>>' being compiled
 C:\Program Files (x86)\Microsoft Visual Studio\2019\Professional\VC\Tools\MSVC\14.24.28314\include\chrono(178): message : see reference to class template instantiation 'std::chrono::duration<__int64,std::nano>' being compiled
 C:\Program Files (x86)\Microsoft Visual Studio\2019\Professional\VC\Tools\MSVC\14.24.28314\include\chrono(610): message : see reference to class template instantiation 'std::chrono::time_point<std::chrono::steady_clock,std::chrono::nanoseconds>' being compiled
@@ -108,8 +108,8 @@ C:\Program Files\spectra-0.8.1\include\Spectra\SymEigsBase.h(69): message : see 
               BOpType=Spectra::IdentityBOp
           ]
   Generating code
-  368 of 12158 functions ( 3.0%) were compiled, the rest were copied from previous compilation.
-    111 functions were new in current compilation
-    1043 functions had inline decision re-evaluated but remain unchanged
+  1 of 12232 functions (<0.1%) were compiled, the rest were copied from previous compilation.
+    0 functions were new in current compilation
+    183 functions had inline decision re-evaluated but remain unchanged
   Finished generating code
   ed_cpp.vcxproj -> C:\Users\rafae\Desktop\syk-ed-cpp-ide\x64\Release\ed_cpp.exe

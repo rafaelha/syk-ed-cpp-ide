@@ -25,12 +25,16 @@ using namespace std::literals;
 typedef SparseMatrix<complex<double>> sm;
 vector<sm> s;
 
-const int N = 32; // Majorana fermions in total
+const int N = 16; // Majorana fermions in total
 const double J = 1.0;
-const int num_evals = 1;
+const int num_evals = 10;
 const int dimSYK = (1 << N / 4);
 double eta;
 double mu;
+double beta_max_overlap;
+
+MatrixXd evecs;
+
 
 int pp[N / 2][N / 4];
 const int g_dim = 1 << N / 4;
@@ -45,14 +49,17 @@ sm HLR(G_dim, G_dim);
 VectorXcd gs;
 VectorXcd I; // TFD at infinite temperature
 VectorXd evalues;
+Vector<double, num_evals> overlaps;
 VectorXd ev_syk;
 VectorXd ev_syk_test;
 MatrixXcd vecs_syk;
 
 MatrixXcd overlap_data;
 
-steady_clock::time_point t0;
-steady_clock::time_point t1;
+//steady_clock::time_point t0;
+//steady_clock::time_point t1;
+system_clock::time_point t0;
+system_clock::time_point t1;
 const static IOFormat CSVFormat(StreamPrecision, DontAlignCols, ", ", "\n");
 
 void define_pauli()
@@ -169,14 +176,14 @@ bool check_anticommutation()
 }
 void tic()
 {
-	//t0 = system_clock::now();
+	t0 = system_clock::now();
 }
 void toc()
 {
-	//t1 = system_clock::now();
-	//auto duration = duration_cast<milliseconds>(t1 - t0);
-	//cout << "Finished in " << duration.count() * 1e-3 << "s." << endl;
-	//t0 = t1;
+	t1 = system_clock::now();
+	auto duration = duration_cast<milliseconds>(t1 - t0);
+	cout << "Finished in " << duration.count() * 1e-3 << "s." << endl;
+	t0 = t1;
 	cout << "Done." << endl;
 }
 void buildH()
@@ -232,7 +239,7 @@ void eigs()
 	if (eigs.info() != SUCCESSFUL)
 		cout << endl << "Error in sparse eigenvalue computation." << endl;
 	evalues = eigs.eigenvalues();
-	MatrixXd evecs = eigs.eigenvectors();
+	evecs = eigs.eigenvectors();
 
 	VectorXd u = evecs(seq(0, (last + 1) / 2 - 1), last);
 	VectorXd v = evecs(seq((last + 1) / 2, last), last);
@@ -312,6 +319,7 @@ void _save(MatrixXd src, string pathAndName)
 		stream << "J=" << J << "\n";
 		stream << "eta=" << eta << "\n";
 		stream << "mu=" << mu << "\n";
+		stream << "beta-optimal=" << beta_max_overlap << "\n";
 		stream << src.format(CSVFormat) << "\n";
 		stream.close();  // close file
 	}
@@ -322,29 +330,52 @@ void _save(MatrixXd src, string pathAndName)
 }
 void TFD()
 {
-	double beta = 0;
-	double dbeta = 10;
-	MatrixXcd betah = -dbeta * h;
+	double beta = 0; // has to start from 0
+	double dbeta = 0.5;
+	MatrixXcd betah = (-dbeta/4) * h;
 	sm betaexp = (betah.exp()).sparseView();
 	cout << "Matrix exp computed." << endl;
 	sm expHLR = kroneckerProduct(betaexp, betaexp);
 	cout << "Full exponential stored." << endl;
 	auto tfd = I;
-	for (; beta < 500;)
+	auto tfd_max_overlap = tfd;
+	beta_max_overlap = 0;
+	double max_overlap = 0;
+	for (; beta <= 500;)
 	{
-		auto v = tfd.dot(gs);
-		cout << "beta: " << beta << ", overlap: " << abs(v) << endl;
+		double olap = abs(tfd.dot(gs));
+		cout << "beta: " << beta << ", overlap: " << olap << endl;
+		if (olap > max_overlap)
+		{
+			max_overlap = olap;
+			tfd_max_overlap = tfd;
+			beta_max_overlap = beta;
+		}
 
 		tfd = expHLR * tfd;
 		tfd /= tfd.norm();
 		beta += dbeta;
+	}
+	cout << endl << "optimal beta: " << beta_max_overlap << ", optimal overlap: " << max_overlap << endl;
+
+
+	for (int i = 0; i < num_evals; i++)
+	{
+		VectorXd u = evecs(seq(0, (last + 1) / 2 - 1), i);
+		VectorXd v = evecs(seq((last + 1) / 2, last), i);
+		VectorXcd state = u + 1i * v;
+		state = state / state.norm();
+
+		double olap = abs(tfd.dot(state));
+		overlaps(i) = olap;
+		cout << "overlap: " << olap << endl;
 	}
 }
 
 int main(int argc, char** argv)
 {
 	eta = 0;
-	mu = 0.6;
+	mu = 0.2;
 	if (argc > 1) eta = atof(argv[1]);
 	if (argc > 2) mu = atof(argv[2]);
 
@@ -389,17 +420,21 @@ int main(int argc, char** argv)
 	eigs();
 	toc();
 	cout << "Lowest Eigenvalues:" << endl << evalues << endl;
+	cout << endl;
 
 	cout << endl << "Norm of (H_L-H_R)|GS>: ";
 	MatrixXcd HLRgs = HLR * gs;
 	cout << (HLRgs).norm() << endl;
+	toc();
 
 	//overlap();
 	TFD();
+	toc();
 
 	//_save(overlap_data.real(), "data/" + to_string(N) + "n" + d_tostr(eta) + "eta" + d_tostr(mu) + "mu_overlap_real.txt");
 	//_save((-1i * overlap_data).real(), "data/" + to_string(N) + "n" + d_tostr(eta) + "eta" + d_tostr(mu) + "mu_overlap_imag.txt");
 	_save(evalues, "data/" + to_string(N) + "n" + d_tostr(eta) + "eta" + d_tostr(mu) + "mu_energies.txt");
+	_save(overlaps, "data/" + to_string(N) + "n" + d_tostr(eta) + "eta" + d_tostr(mu) + "mu_overlaps.txt");
 	//_save(HLRgs.real(), to_string(N) + "n_HLRgs_real.txt");
 	//_save((-1i * HLRgs).real(), to_string(N) + "n_HLRgs_imag.txt");
 	//_save(ev_syk.real(), to_string(N) + "n_ev_syk.txt");

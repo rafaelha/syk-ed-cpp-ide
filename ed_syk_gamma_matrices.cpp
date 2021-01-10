@@ -27,7 +27,7 @@ vector<sm> s;
 
 const int N = 16; // Majorana fermions in total
 const double J = 1.0;
-const int num_evals = 10;
+const int num_evals = 40;
 const int dimSYK = (1 << N / 4);
 double eta;
 double mu;
@@ -331,7 +331,7 @@ void _save(MatrixXd src, string pathAndName)
 void TFD()
 {
 	double beta = 0; // has to start from 0
-	double dbeta = 0.5;
+	double dbeta = 0.02;
 	MatrixXcd betah = (-dbeta/4) * h;
 	sm betaexp = (betah.exp()).sparseView();
 	cout << "Matrix exp computed." << endl;
@@ -341,7 +341,7 @@ void TFD()
 	auto tfd_max_overlap = tfd;
 	beta_max_overlap = 0;
 	double max_overlap = 0;
-	for (; beta <= 500;)
+	for (; beta <= 2;)
 	{
 		double olap = abs(tfd.dot(gs));
 		cout << "beta: " << beta << ", overlap: " << olap << endl;
@@ -416,7 +416,7 @@ int main(int argc, char** argv)
 	toc();
 
 
-	cout << endl << "Computing lowest eigenvalue of coupled SYKs... ";
+	cout << endl << "Computing lowest eigenvalue(s) of coupled SYKs... ";
 	eigs();
 	toc();
 	cout << "Lowest Eigenvalues:" << endl << evalues << endl;

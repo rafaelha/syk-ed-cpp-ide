@@ -25,9 +25,9 @@ using namespace std::literals;
 typedef SparseMatrix<complex<double>> sm;
 vector<sm> s;
 
-const int N = 16; // Majorana fermions in total
+const int N = 32; // Majorana fermions in total
 const double J = 1.0/sqrt(2);
-const int num_evals = 20;
+const int num_evals = 100;
 const int dimSYK = (1 << N / 4);
 double eta;
 double mu;
@@ -440,13 +440,13 @@ int main(int argc, char** argv)
 	//TFD();
 	toc();
 
-	_save(overlap_data, "data/" + to_string(N) + "n" + d_tostr(eta) + "eta" + d_tostr(mu) + "mu_overlap.txt");
-	_save(evalues, "data/" + to_string(N) + "n" + d_tostr(eta) + "eta" + d_tostr(mu) + "mu_energies.txt");
+	_save(overlap_data, "data32/" + to_string(N) + "n" + d_tostr(eta) + "eta" + d_tostr(mu) + "mu_overlap.txt");
+	_save(evalues, "data32/" + to_string(N) + "n" + d_tostr(eta) + "eta" + d_tostr(mu) + "mu_energies.txt");
 
 	// results from TFD
 	//_save(overlaps, "data/" + to_string(N) + "n" + d_tostr(eta) + "eta" + d_tostr(mu) + "mu_overlaps.txt");
 	
 	//_save(HLRgs.real(), to_string(N) + "n_HLRgs_real.txt");
 	//_save((-1i * HLRgs).real(), to_string(N) + "n_HLRgs_imag.txt");
-	_save(ev_syk.real(), "data/" + to_string(N) + "n_ev_syk.txt");
+	_save(ev_syk.real(), "data32/" + to_string(N) + "n_ev_syk.txt");
 }

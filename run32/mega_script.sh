@@ -1,7 +1,7 @@
 #!/bin/bash
 
 MAX=2
-for i in `seq 0 0.02 ${MAX}`
+for i in `seq 0 0.05 ${MAX}`
 do
 	FILENAME=job_file_${i}.ll
 	echo "# @ shell=/bin/bash" > $FILENAME
@@ -15,7 +15,7 @@ do
 	echo "# @ node_usage = shared" >> $FILENAME
 
 	echo "# @ node = 1" >> $FILENAME
-	echo "# @ tasks_per_node = 1" >> $FILENAME
+	echo "# @ tasks_per_node = 4" >> $FILENAME
 	echo "# @ environment = COPY_ALL" >> $FILENAME
 	echo "# @ notification = never" >> $FILENAME
 	echo "# @ notify_user =" >> $FILENAME

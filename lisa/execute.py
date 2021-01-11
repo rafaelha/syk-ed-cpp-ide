@@ -7,7 +7,7 @@ MAX = int(sys.argv[2])
 # idx = 0
 
 etas = np.linspace(0,2,100)
-mus = np.array([0,0.1,0.6])
+mus = np.array([0.2,0.3])
 etas = np.repeat(etas,len(mus))
 mus = np.tile(mus,len(etas))
 

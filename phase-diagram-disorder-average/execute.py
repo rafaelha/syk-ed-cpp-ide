@@ -6,10 +6,11 @@ idx = int(sys.argv[1])
 MAX = int(sys.argv[2])
 # idx = 0
 
-etas = np.linspace(0,2,100)
-mus = np.linspace(0,0.2,100)
+etas = np.linspace(0,2,80)
+mus = np.linspace(0,0.2,80)
 etas = np.repeat(etas,len(mus))
 mus = np.tile(mus,len(etas))
+seeds = np.arange(10)
 
 etas = etas[idx::MAX]
 mus = mus[idx::MAX]
@@ -19,7 +20,9 @@ for i in range(len(etas)):
         mu = mus[i]
 
         print(eta)
-        bashCommand = f"./ed.exe {eta} {mu}"
-        process = subprocess.Popen(bashCommand.split(), stdout=subprocess.PIPE)
-        output, error = process.communicate()
-        print(output)
+        for seed in seeds:
+                bashCommand = f"./ed.exe {eta} {mu} {seed}"
+                process = subprocess.Popen(bashCommand.split(), stdout=subprocess.PIPE)
+                output, error = process.communicate()
+                print(output)
+        

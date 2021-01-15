@@ -444,13 +444,13 @@ int main(int argc, char** argv)
 	//TFD();
 	toc();
 
-	_save(overlap_data, "data32/" + to_string(N) + "n" + d_tostr(eta) + "eta" + d_tostr(mu) + "mu" + to_str(seed) + "seed_overlap.txt");
-	_save(evalues, "data32/" + to_string(N) + "n" + d_tostr(eta) + "eta" + d_tostr(mu) + "mu" + to_str(seed) + "seed_energies.txt");
+	_save(overlap_data, "data32/" + to_string(N) + "n" + d_tostr(eta) + "eta" + d_tostr(mu) + "mu" + to_string(seed) + "seed_overlap.txt");
+	_save(evalues, "data32/" + to_string(N) + "n" + d_tostr(eta) + "eta" + d_tostr(mu) + "mu" + to_string(seed) + "seed_energies.txt");
 
 	// results from TFD
 	//_save(overlaps, "data/" + to_string(N) + "n" + d_tostr(eta) + "eta" + d_tostr(mu) + "mu_overlaps.txt");
 
 	//_save(HLRgs.real(), to_string(N) + "n_HLRgs_real.txt");
 	//_save((-1i * HLRgs).real(), to_string(N) + "n_HLRgs_imag.txt");
-	_save(ev_syk.real(), "data32/" + to_string(N) + "n" + to_str(seed) + "seed_ev_syk.txt");
+	_save(ev_syk.real(), "data32/" + to_string(N) + "n" + to_string(seed) + "seed_ev_syk.txt");
 }

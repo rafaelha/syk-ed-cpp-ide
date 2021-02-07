@@ -1,7 +1,0 @@
-n=32
-J=0.707107
-eta=1.08861
-mu=0.0177215
-beta-optimal=0
-max-overlap=0
--1.16691

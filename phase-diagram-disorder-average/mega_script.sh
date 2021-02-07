@@ -1,6 +1,6 @@
 #!/bin/bash
 
-MAX=223
+MAX=319
 MAX2=$((MAX+1))
 for i in `seq 0 1 ${MAX}`
 do
@@ -20,7 +20,7 @@ do
 	echo "# @ environment = COPY_ALL" >> $FILENAME
 	echo "# @ notification = never" >> $FILENAME
 	echo "# @ notify_user =" >> $FILENAME
-	echo "# @ class = 28core" >> $FILENAME
+	echo "# @ class = 32core" >> $FILENAME
 	echo "# @ queue" >> $FILENAME
 
 	echo "# exit on error" >> $FILENAME

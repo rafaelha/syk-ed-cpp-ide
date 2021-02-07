@@ -6,7 +6,7 @@ idx = int(sys.argv[1])
 MAX = int(sys.argv[2])
 # idx = 0
 
-etas = np.linspace(0,2,80)
+etas = np.concatenate([np.linspace(0,2,80),[1]])
 mus = np.linspace(0,0.2,80)
 etas = np.repeat(etas,len(mus))
 mus = np.tile(mus,len(etas))
@@ -25,4 +25,3 @@ for i in range(len(etas)):
                 process = subprocess.Popen(bashCommand.split(), stdout=subprocess.PIPE)
                 output, error = process.communicate()
                 print(output)
-        

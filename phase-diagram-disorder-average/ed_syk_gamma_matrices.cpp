@@ -25,7 +25,7 @@ using namespace std::literals;
 typedef SparseMatrix<complex<double>> sm;
 vector<sm> s;
 
-const int N = 32; // Majorana fermions in total
+const int N = 16; // Majorana fermions in total
 const double J = 1.0/sqrt(2);
 const int num_evals = 1;
 const int dimSYK = (1 << N / 4);
@@ -235,7 +235,7 @@ void eigs()
 	// Construct matrix operation object using the wrapper class DenseSymMatProd
 	SparseSymMatProd<double> op(H_real);
 	// Construct eigen solver object, requesting the largest three eigenvalues
-	SymEigsSolver< double, SMALLEST_ALGE, SparseSymMatProd<double> > eigs(&op, num_evals, 80*num_evals);
+	SymEigsSolver< double, SMALLEST_ALGE, SparseSymMatProd<double> > eigs(&op, num_evals, 30*num_evals);
 	// Initialize and compute
 	eigs.init();
 	int nconv = eigs.compute();
@@ -444,13 +444,13 @@ int main(int argc, char** argv)
 	//TFD();
 	toc();
 
-	_save(overlap_data, "data32/" + to_string(N) + "n" + d_tostr(eta) + "eta" + d_tostr(mu) + "mu" + to_string(seed) + "seed_overlap.txt");
-	_save(evalues, "data32/" + to_string(N) + "n" + d_tostr(eta) + "eta" + d_tostr(mu) + "mu" + to_string(seed) + "seed_energies.txt");
+	_save(overlap_data, "data16/" + to_string(N) + "n" + d_tostr(eta) + "eta" + d_tostr(mu) + "mu" + to_string(seed) + "seed_overlap.txt");
+	_save(evalues, "data16/" + to_string(N) + "n" + d_tostr(eta) + "eta" + d_tostr(mu) + "mu" + to_string(seed) + "seed_energies.txt");
 
 	// results from TFD
 	//_save(overlaps, "data/" + to_string(N) + "n" + d_tostr(eta) + "eta" + d_tostr(mu) + "mu_overlaps.txt");
 
 	//_save(HLRgs.real(), to_string(N) + "n_HLRgs_real.txt");
 	//_save((-1i * HLRgs).real(), to_string(N) + "n_HLRgs_imag.txt");
-	_save(ev_syk.real(), "data32/" + to_string(N) + "n" + to_string(seed) + "seed_ev_syk.txt");
+	_save(ev_syk.real(), "data16/" + to_string(N) + "n" + to_string(seed) + "seed_ev_syk.txt");
 }

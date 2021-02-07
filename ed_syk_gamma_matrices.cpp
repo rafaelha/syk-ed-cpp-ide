@@ -25,9 +25,9 @@ using namespace std::literals;
 typedef SparseMatrix<complex<double>> sm;
 vector<sm> s;
 
-const int N = 16; // Majorana fermions in total
+const int N = 32; // Majorana fermions in total
 const double J = 1.0/sqrt(2);
-const int num_evals = 20;
+const int num_evals = 1;
 const int dimSYK = (1 << N / 4);
 double eta;
 double mu;
@@ -233,7 +233,7 @@ void eigs()
 	// Construct matrix operation object using the wrapper class DenseSymMatProd
 	SparseSymMatProd<double> op(H_real);
 	// Construct eigen solver object, requesting the largest three eigenvalues
-	SymEigsSolver< double, SMALLEST_ALGE, SparseSymMatProd<double> > eigs(&op, num_evals, 6*num_evals);
+	SymEigsSolver< double, SMALLEST_ALGE, SparseSymMatProd<double> > eigs(&op, num_evals, 6 * num_evals);
 	// Initialize and compute
 	eigs.init();
 	int nconv = eigs.compute();
@@ -383,8 +383,8 @@ void TFD()
 
 int main(int argc, char** argv)
 {
-	eta = 0;
-	mu = 0.2;
+	eta = 1;
+	mu = 0.02;
 	if (argc > 1) eta = atof(argv[1]);
 	if (argc > 2) mu = atof(argv[2]);
 

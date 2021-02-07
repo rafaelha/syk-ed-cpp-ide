@@ -13,7 +13,7 @@ seeds = np.loadtxt('missing_seeds.txt')
 
 etas = etas[idx::MAX]
 mus = mus[idx::MAX]
-seeds = mus[idx::MAX]
+seeds = seeds[idx::MAX]
 
 for i in range(len(etas)):
         eta = etas[i]

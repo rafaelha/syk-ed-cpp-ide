@@ -1,6 +1,6 @@
 #!/bin/bash
 
-MAX=300
+MAX=319
 MAX2=$((MAX+1))
 for i in `seq 0 1 ${MAX}`
 do

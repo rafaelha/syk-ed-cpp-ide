@@ -235,7 +235,7 @@ void eigs()
 	// Construct matrix operation object using the wrapper class DenseSymMatProd
 	SparseSymMatProd<double> op(H_real);
 	// Construct eigen solver object, requesting the largest three eigenvalues
-	SymEigsSolver< double, SMALLEST_ALGE, SparseSymMatProd<double> > eigs(&op, num_evals, 6*num_evals);
+	SymEigsSolver< double, SMALLEST_ALGE, SparseSymMatProd<double> > eigs(&op, num_evals, 18*num_evals);
 	// Initialize and compute
 	eigs.init();
 	int nconv = eigs.compute();
